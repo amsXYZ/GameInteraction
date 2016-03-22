@@ -19,8 +19,10 @@ namespace GameInteraction
 		[SerializeField]
 		private float heightDamping;
 
-		// Update is called once per frame
-		void LateUpdate()
+        public bool screenShake;
+
+        // Update is called once per frame
+        void LateUpdate()
 		{
 			// Early out if we don't have a target
 			if (!target)
@@ -47,11 +49,15 @@ namespace GameInteraction
 			transform.position = target.position;
 			transform.position -= currentRotation * Vector3.forward * distance;
 
-			// Set the height of the camera
-			transform.position = new Vector3(transform.position.x , currentHeight, transform.position.z);
-
-			// Always look at the target
-			transform.LookAt(target);
+            // Set the height of the camera
+            if (!screenShake) { transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z); transform.LookAt(target); }
+            else
+            {
+                float dispX = (Mathf.PerlinNoise(Time.time * 100, Time.time * 100) - 0.5f) * 2 / 10;
+                float dispY = (Mathf.PerlinNoise(dispX * 256, dispX * 256) - 0.5f) * 2 / 10;
+                float dispZ = (Mathf.PerlinNoise(dispY * 256, dispY * 256) - 0.5f) * 2 / 10;
+                transform.position = new Vector3(transform.position.x, currentHeight + dispY, transform.position.z);
+            }
 		}
 	}
 }
