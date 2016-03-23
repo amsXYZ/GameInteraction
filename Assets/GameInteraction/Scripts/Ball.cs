@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -36,11 +34,9 @@ namespace GameInteraction
         // If the player is touching any normal >= minWalkableNormal.
         private bool isGrounded = false;
 
-        private const float groundRayLength = 1f; // The length of the ray to check if the ball is grounded.
         private float fallVelocity = 0f;
         new public Rigidbody rigidbody { get; private set; }
 
-        private Material ballMaterial;
         
         public int score { get; private set; }
 
@@ -49,8 +45,6 @@ namespace GameInteraction
             Application.targetFrameRate = 30;
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.maxAngularVelocity = maxAngularVelocity;
-
-            ballMaterial = GetComponent<MeshRenderer>().material;
         }
 
         public void Move(Vector3 moveDirection, bool jump)
@@ -62,7 +56,7 @@ namespace GameInteraction
                 rigidbody.AddTorque(new Vector3(moveDirection.z, 0, -moveDirection.x) * movePower);
 
                 if (jump)
-                    rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);                
+                    rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpPower, rigidbody.velocity.z);
             }
             else // Air movement.
             {
@@ -118,23 +112,17 @@ namespace GameInteraction
                 int fallDamage = Mathf.Max(Mathf.RoundToInt(Mathf.Abs(fallVelocity) - fallDamageVelocity), 0);
                 fallVelocity = 0f; // Reset fall velocity to zero as soon as we hit something.
                 if (fallDamage > 0)
-                    StartCoroutine(TakeDamage(fallDamage));
+                    TakeDamage(fallDamage);
             }
         }
 
-        public IEnumerator TakeDamage(int value)
+        public void TakeDamage(int value)
         {
             _health -= value;
             _health = Mathf.Max(_health, 0);
             Debug.Log("Player took " + value + " damage!");
             if (health <= 0)
                 OnDeath();
-            ballMaterial.SetFloat("_Hurt", 1.0f);
-            //Camera.main.GetComponent<SmoothFollow>().screenShake = true;
-            yield return new WaitForSeconds(.1f);
-            ballMaterial.SetFloat("_Hurt", 0.0f);
-            yield return new WaitForSeconds(.1f);
-            Camera.main.GetComponent<SmoothFollow>().screenShake = false;
         }
 
         public void AddHealth(int value)

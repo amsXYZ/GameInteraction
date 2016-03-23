@@ -1,0 +1,5 @@
+-Put all your custom data in this ("Student") folder.
+
+-You can copy data from the "Playground" scene into your "Tutorial" scene.
+
+-You can also drag the prefabs from the GameInteraction/Prefabs folder into your scene.

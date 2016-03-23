@@ -2,13 +2,15 @@
 
 namespace GameInteraction
 {
-    public class ZeroGravity : MonoBehaviour
+    public class StudentZeroGravity : MonoBehaviour
     {
         private void OnTriggerEnter(Collider collider)
         {
             Rigidbody rigidbody = collider.GetComponent<Rigidbody>();
             if (rigidbody)
                 rigidbody.useGravity = false;
+            if (Camera.main)
+                Camera.main.GetComponent<UnityStandardAssets.ImageEffects.Bloom>().enabled = true;
         }
 
         private void OnTriggerExit(Collider collider)
@@ -16,6 +18,8 @@ namespace GameInteraction
             Rigidbody rigidbody = collider.GetComponent<Rigidbody>();
             if (rigidbody)
                 rigidbody.useGravity = true;
+            if (Camera.main)
+                Camera.main.GetComponent<UnityStandardAssets.ImageEffects.Bloom>().enabled = false;
         }
     }
 }
