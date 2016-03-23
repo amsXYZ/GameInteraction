@@ -130,7 +130,7 @@ namespace GameInteraction
             if (health <= 0)
                 OnDeath();
             ballMaterial.SetFloat("_Hurt", 1.0f);
-            Camera.main.GetComponent<SmoothFollow>().screenShake = true;
+            //Camera.main.GetComponent<SmoothFollow>().screenShake = true;
             yield return new WaitForSeconds(.1f);
             ballMaterial.SetFloat("_Hurt", 0.0f);
             yield return new WaitForSeconds(.1f);
